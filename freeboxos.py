@@ -36,12 +36,6 @@ logging.basicConfig(
 )
 
 
-def exito():
-    cmd = "killall cheese"
-    Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
-    exit()
-
-
 try:
     with open(
         "/home/" + user + "/.local/share/select_freeboxos" "/info_progs.json", "r"
@@ -84,6 +78,21 @@ login.send_keys(ADMIN_PASSWORD)
 sleep(1)
 login.send_keys(Keys.RETURN)
 sleep(10)
+
+try:
+    invalid_password = driver.find_element(
+        By.XPATH, "//div[contains(text(), 'Identifiants invalides')]"
+    )
+    logging.error(
+        "Le mot de passe administrateur de la Freebox est invalide. "
+        "La programmation des enregistrements n'a pas "
+        "pu être réalisée. Merci de vérifier le mot de passe."
+    )
+    driver.quit()
+    exit()
+except NoSuchElementException:
+    pass
+
 
 try:
     with open(
